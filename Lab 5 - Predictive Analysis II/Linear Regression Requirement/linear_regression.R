@@ -1,23 +1,22 @@
 #setwd("~/LAB")
-rm(list=ls())
+rm(list=ls()) # clear the R environment by removing all objects from the workspace
 
 #=============================Part(1)=====================================
 x <- runif(100, 0, 10)     # 100 draws between 0 & 10
 
 #(Q1) Try changing the value of standard deviation (sd) in the next command 
 #How do the data points change for different values of standard deviation?
-y <- 5 + 6*x + rnorm(100, sd = 2)  # default values for rnorm (mean = 0 and sigma = 1)
 
+y <- 5 + 6*x + rnorm(100, sd = 2)  # default values for rnorm (mean = 0 and sigma = 1)
 #Plot it
-plot (x,y)
+plot (x,y,main = "y=5+6*x + rnorm(100, sd = 2)")
+
 
 # OLS model
 # OLS : Ordinary Least Squares
 model1 <- lm(y ~ x)
 # Learn about this object by saying ?lm and str(d)
 
-# Compact model results
-print(model1)
 #(Q2) How are the coefficients of the linear model affected by changing the value
 #of standard deviation in Q1?
 
@@ -26,7 +25,7 @@ ypred <- predict(model1) # use the trained model to predict the same training da
 # Learn about predict by saying ?predict.lm
 
 par(mfrow=c(1,1))
-plot(y,y, type="l", xlab="true y", ylab="predicted y") # ploting the ideal line
+plot(y,y, type="l",main = "Predictions Model(1) std:2", xlab="true y", ylab="predicted y") # ploting the ideal line
 points(y, ypred) # plotting the predicted points
                  # the nearer to the ideal line the better
 
@@ -43,7 +42,7 @@ cat("OLS gave slope of ", d1$coefficients[2,1],
 
 #Graphic dignostic (cont.)
 par(mfrow=c(1,1)) # parameters for the next plot
-plot(model1, 1) # plot one diagnostic graphs
+plot(model1, 1,main = "Residual Plot For Model(1) std:2") # plot one diagnostic graphs
 
 #(Q4)What do you conclude about the residual plot? Is it a good residual plot?
 #========================End of Part(1)==============================================
@@ -62,7 +61,7 @@ summary(model)
 #Creating a test set (test vector)
 
 #EDIT: We renamed the variable as x1 instead of xtest (in previous versions)
-#becaues the lm function searches in the formula for variables named 
+#because the lm function searches in the formula for variables named 
 #with x1 and not any other name.
 #So, if you used xtest, the lm function will not know what is xtest and
 #a random plot will be generated. 
@@ -89,6 +88,9 @@ plot(model, 1) # plot the diagnostic graphs
 
 #=================================Part(3)==================================================
 #(Q7) Import the dataset LungCapData.tsv. What are the variables in this dataset?
+dfcsv <- read.csv("LungCapData.tsv",header = TRUE)
+# Structure for the dF
+summary(dfcsv)
 
 #(Q8) Draw a scatter plot of Age (x-axis) vs. LungCap (y-axis). Label x-axis "Age" and y-axis "LungCap"
 
