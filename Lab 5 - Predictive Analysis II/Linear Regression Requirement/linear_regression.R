@@ -8,55 +8,121 @@ x <- runif(100, 0, 10)     # 100 draws between 0 & 10
 #How do the data points change for different values of standard deviation?
 
 y <- 5 + 6*x + rnorm(100, sd = 2)  # default values for rnorm (mean = 0 and sigma = 1)
+y_50 <- 5 + 6*x + rnorm(100, sd = 50)
+y_0 <- 5 + 6*x + rnorm(100, sd = 0)
+y_100 <- 5 + 6*x + rnorm(100, sd = 100)
+
 #Plot it
 plot (x,y,main = "y=5+6*x + rnorm(100, sd = 2)")
+plot (x,y_50,main = "y=5+6*x + rnorm(100, sd = 50)")
+plot (x,y_0,main = "y=5+6*x + rnorm(100, sd = 0)")
+plot (x,y_100,main = "y=5+6*x + rnorm(100, sd = 100)")
 
 
 # OLS model
 # OLS : Ordinary Least Squares
 model1 <- lm(y ~ x)
+model1_50 <- lm(y_50 ~ x)
+model1_0 <- lm(y_0 ~ x)
+model1_100 <- lm(y_100 ~ x)
 # Learn about this object by saying ?lm and str(d)
 
 #(Q2) How are the coefficients of the linear model affected by changing the value
 #of standard deviation in Q1?
 
 # Regression diagnostics --
-ypred <- predict(model1) # use the trained model to predict the same training data
-# Learn about predict by saying ?predict.lm
-
-par(mfrow=c(1,1))
-plot(y,y, type="l",main = "Predictions Model(1) std:2", xlab="true y", ylab="predicted y") # ploting the ideal line
-points(y, ypred) # plotting the predicted points
-                 # the nearer to the ideal line the better
+ypred <- predict(model1) # use the trained model to predict the same training data Learn about predict by saying ?predict.lm
+ypred_50 <- predict(model1_50)
+ypred_0 <- predict(model1_0)
+ypred_100 <- predict(model1_100)
 
 # Detailed model results
 d1 <- summary(model1)
 print(model1)
 
+# Detailed model results
+d1_50 <- summary(model1_50)
+print(model1_50)
+
+# Detailed model results
+d1_0 <- summary(model1_0)
+print(model1_0)
+
+# Detailed model results
+d1_100 <- summary(model1_100)
+print(model1_100)
+
+
+
+# plotting the predicted points the nearer to the ideal line the better
+par(mfrow=c(1,1))
+plot(y,y, type="l",col="red",main = "Predictions Model(1) std:2", xlab="true y", ylab="predicted y") # plotting the ideal line
+points(y, ypred)
+
+par(mfrow=c(1,1))
+plot(y_50,y_50, type="l",col="red",main = "Predictions Model(1) std:50", xlab="true y", ylab="predicted y") # plotting the ideal line
+points(y_50, ypred_50)
+
+
+par(mfrow=c(1,1))
+plot(y_0,y_0, type="l",col="red",main = "Predictions Model(1) std:0", xlab="true y", ylab="predicted y") # plotting the ideal line
+points(y_0, ypred_0)
+
+
+par(mfrow=c(1,1))
+plot(y_100,y_100, type="l",col="red",main = "Predictions Model(1) std:100", xlab="true y", ylab="predicted y") # plotting the ideal line
+points(y_100, ypred_100)
+
+
 #(Q3) How is the value of R-squared affected by changing the value
 #of standard deviation in Q1?
-
 # Learn about this object by saying ?summary.lm and by saying str(d)
 cat("OLS gave slope of ", d1$coefficients[2,1],   
     "and an R-sqr of ", d1$r.squared, "\n")
-
 #Graphic dignostic (cont.)
 par(mfrow=c(1,1)) # parameters for the next plot
 plot(model1, 1,main = "Residual Plot For Model(1) std:2") # plot one diagnostic graphs
 
+cat("OLS gave slope of ", d1_50$coefficients[2,1],   
+    "and an R-sqr of ", d1_50$r.squared, "\n")
+#Graphic dignostic (cont.)
+par(mfrow=c(1,1)) # parameters for the next plot
+plot(model1_50, 1,main = "Residual Plot For Model(1) std:50") # plot one diagnostic graphs
+
+
+cat("OLS gave slope of ", d1_0$coefficients[2,1],   
+    "and an R-sqr of ", d1_0$r.squared, "\n")
+#Graphic dignostic (cont.)
+par(mfrow=c(1,1)) # parameters for the next plot
+plot(model1_0, 1,main = "Residual Plot For Model(1) std:0") # plot one diagnostic graphs
+
+
+cat("OLS gave slope of ", d1_100$coefficients[2,1],   
+    "and an R-sqr of ", d1_100$r.squared, "\n")
+#Graphic dignostic (cont.)
+par(mfrow=c(1,1)) # parameters for the next plot
+plot(model1_100, 1,main = "Residual Plot For Model(1) std:100") # plot one diagnostic graphs
+
+
 #(Q4)What do you conclude about the residual plot? Is it a good residual plot?
+print("Check Report")
 #========================End of Part(1)==============================================
 
 #========================Part(2)=====================================================
+rm(list=ls()) # clear the R environment by removing all objects from the workspace
+
 #Training a linear regression model
 x1 <- runif(100) 
 # introduce a slight nonlinearity
 #(A)
 y1 = 5 + 6*x1 + 0.1*x1*x1 + rnorm(100)
-plot(x1,y1)
+plot(x1,y1,main = "Training Data Points y1 = 5 + 6*x1 + 0.1*x1*x1 + rnorm(100)")
+#y1 = 5 + 6*x1 + 20*x1*x1 + rnorm(100)
+#plot(x1,y1,main = "Training Data Points y1 = 5 + 6*x1 + 20*x1*x1 + rnorm(100)")
 model <- lm(y1 ~ x1)
 
 summary(model)
+
 
 #Creating a test set (test vector)
 
@@ -69,11 +135,13 @@ summary(model)
 x1 <- runif(100)
 #(B)
 ytrue = 5 + 6*x1 + 0.1*x1*x1 + rnorm(100)  # same equation of y1 but on xtest to get true y for xtest
+#ytrue = 5 + 6*x1 + 20*x1*x1 + rnorm(100)
 
 ypred <- predict(model, data.frame(x1))
 
 par(mfrow=c(1,1))
-plot(ytrue, ytrue, type="l", xlab="true y", ylab="predicted y")
+plot(ytrue, ytrue, type="l", xlab="true y", ylab="predicted y",main="Testing Data Points y1 = 5 + 6*x1 + 0.1*x1*x1 + rnorm(100)")
+#plot(ytrue, ytrue, type="l", xlab="true y", ylab="predicted y",main="Testing Data Points y1 = 5 + 6*x1 + 20*x1*x1 + rnorm(100)")
 points(ytrue, ypred)
 
 # graphic dignostic (cont.)
